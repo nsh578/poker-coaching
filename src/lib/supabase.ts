@@ -1,9 +1,13 @@
 // src/lib/supabase.ts
 import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { createBrowserClient } from '@supabase/ssr'
 
-export const createServerSupabaseClient = async () => {
-  const cookieStore = await cookies()          // ← note the await
+// ──────────────── SERVER CLIENT (only used in server components / API routes) ────────────────
+export async function createServerSupabaseClient() {
+  // This import is dynamic so Next.js never tries to bundle it on the client
+  const { cookies } = await import('next/headers')
+
+  const cookieStore = await cookies()
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -15,11 +19,11 @@ export const createServerSupabaseClient = async () => {
         },
         setAll(cookiesToSet) {
           try {
-            cookiesToSet.forEach(({ name, value, options }) => {
+            cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
-            })
-          } catch (error) {
-            // ignore — middleware will handle it
+            )
+          } catch {
+            // ignore – middleware handles it
           }
         },
       },
@@ -27,8 +31,7 @@ export const createServerSupabaseClient = async () => {
   )
 }
 
-// Client-side helper (unchanged)
-import { createBrowserClient } from '@supabase/ssr'
+// ──────────────── BROWSER CLIENT (safe to use in 'use client' components) ────────────────
 export const createBrowserSupabaseClient = () =>
   createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

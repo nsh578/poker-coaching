@@ -1,7 +1,9 @@
 // src/app/coaching/page.tsx
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Check } from "lucide-react";
+'use client'
+
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Check } from "lucide-react"
 
 export default function Coaching() {
   const packages = [
@@ -16,11 +18,13 @@ export default function Coaching() {
         "Tournament schedule planning",
       ],
       cta: "Book a session",
+      ctaLink: "mailto:you@example.com",
     },
     {
       name: "Lifetime Video Library",
       price: "$499",
       popular: true,
+      priceId: "price_1YOUR_LIFETIME_PRICE_ID_HERE", // ← replace with your real test price ID
       features: [
         "150+ hours of advanced training videos",
         "New videos every month",
@@ -34,6 +38,7 @@ export default function Coaching() {
       name: "Monthly Membership",
       price: "$99/mo",
       popular: false,
+      priceId: "", // optional — add your monthly price ID later
       features: [
         "All current videos",
         "New videos every month",
@@ -42,7 +47,18 @@ export default function Coaching() {
       ],
       cta: "Start Monthly",
     },
-  ];
+  ]
+
+  const handleCheckout = async (priceId: string) => {
+    if (!priceId) return
+    const res = await fetch('/api/stripe', {
+      method: 'POST',
+      body: JSON.stringify({ price_id: priceId }),
+      headers: { 'Content-Type': 'application/json' },
+    })
+    const { url } = await res.json()
+    window.location.href = url
+  }
 
   return (
     <main className="min-h-screen bg-neutral-950 py-20 px-6">
@@ -79,20 +95,29 @@ export default function Coaching() {
                   </li>
                 ))}
               </ul>
-              <Button
-                className={`w-full ${
-                  pkg.popular
-                    ? "bg-emerald-600 hover:bg-emerald-500"
-                    : "bg-neutral-800 hover:bg-neutral-700"
-                }`}
-                size="lg"
-              >
-                {pkg.cta}
-              </Button>
+
+              {pkg.priceId ? (
+                <Button
+                  onClick={() => handleCheckout(pkg.priceId)}
+                  className={`w-full ${
+                    pkg.popular
+                      ? "bg-emerald-600 hover:bg-emerald-500"
+                      : "bg-neutral-800 hover:bg-neutral-700"
+                  }`}
+                  size15="lg"
+                  size="lg"
+                >
+                  {pkg.cta}
+                </Button>
+              ) : (
+                <Button asChild className="w-full" size="lg">
+                  <a href={pkg.ctaLink}>{pkg.cta}</a>
+                </Button>
+              )}
             </Card>
           ))}
         </div>
       </div>
     </main>
-  );
+  )
 }
