@@ -10,7 +10,7 @@ export default function Home() {
         <div className="container mx-auto text-center max-w-5xl">
           <h1 className="text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-white to-emerald-400 bg-clip-text text-transparent">
             Crush MTTs with <br className="md:hidden" />
-            <span className="text-emerald-400">[Michael]</span>
+            <span className="text-emerald-400">Michael Nam</span>
           </h1>
           <p className="text-xl md:text-2xl text-neutral-300 mb-10 max-w-3xl mx-auto">
             Top-300 GPI • $1.5M+ career cashes • 2 years crushing online & live tournaments
@@ -28,18 +28,14 @@ export default function Home() {
 
       {/* Proof cards */}
       <section className="container mx-auto px-6 -mt-10 mb-20">
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-6 max-w-xl mx-auto">
           <Card className="bg-neutral-900/80 border-neutral-800 p-8 text-center backdrop-blur">
-            <div className="text-5xl font-black text-emerald-400">$4.2M+</div>
+            <div className="text-5xl font-black text-emerald-400">$1.5M+</div>
             <div className="text-neutral-400 mt-2">Career Earnings</div>
           </Card>
           <Card className="bg-neutral-900/80 border-neutral-800 p-8 text-center backdrop-blur">
-            <div className="text-5xl font-black text-emerald-400">Top 100</div>
+            <div className="text-5xl font-black text-emerald-400">Top 300</div>
             <div className="text-neutral-400 mt-2">GPI Ranking</div>
-          </Card>
-          <Card className="bg-neutral-900/80 border-neutral-800 p-8 text-center backdrop-blur">
-            <div className="text-5xl font-black text-emerald-400">1,200+</div>
-            <div className="text-neutral-400 mt-2">Students Coached</div>
           </Card>
         </div>
       </section>
