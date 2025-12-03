@@ -104,7 +104,6 @@ export default function Coaching() {
                       ? "bg-emerald-600 hover:bg-emerald-500"
                       : "bg-neutral-800 hover:bg-neutral-700"
                   }`}
-                  size15="lg"
                   size="lg"
                 >
                   {pkg.cta}
