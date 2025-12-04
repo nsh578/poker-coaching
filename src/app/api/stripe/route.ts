@@ -8,7 +8,10 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2025-11
 
 export async function POST(request: NextRequest) {
   const { price_id } = await request.json()
-  const cookieStore = cookies()
+  
+  // ← FIXED: Await the cookie store (Next.js 15 requirement)
+  const cookieStore = await cookies()
+  
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
