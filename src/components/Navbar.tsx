@@ -1,63 +1,124 @@
+// src/components/Navbar.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react"; // Works now!
+import { Menu, LogOut } from "lucide-react";
 import Link from "next/link";
+import { createBrowserSupabaseClient } from "@/lib/supabase";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
+  const [user, setUser] = useState<any>(null);
+  const supabase = createBrowserSupabaseClient();
+
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => listener.subscription.unsubscribe();
+  }, [supabase]);
+
+  const signInWithGoogle = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: location.origin },
+    });
+  };
+
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    window.location.href = "/";
+  };
+
   const links = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Coaching", href: "/coaching" },
     { name: "Videos", href: "/videos" },
-    { name: "Results", href: "/results" },
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-neutral-800/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-neutral-800 bg-neutral-950/95 backdrop-blur">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="text-2xl font-bold text-emerald-400 hover:text-emerald-300 transition-colors">
-          Michael Nam Poker
+        <Link href="/" className="text-2xl font-bold text-emerald-400">
+          [YourName] Poker
         </Link>
 
-        {/* Desktop menu */}
+        {/* Desktop */}
         <nav className="hidden md:flex items-center gap-8">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-foreground/80 hover:text-foreground transition-colors"
+              className="text-neutral-300 hover:text-white transition"
             >
               {link.name}
             </Link>
           ))}
-          <Button className="bg-emerald-600 hover:bg-emerald-700 text-primary-foreground">
-            Book Coaching
-          </Button>
+
+          {user ? (
+            <Button
+              onClick={signOut}
+              variant="ghost"
+              size="sm"
+              className="gap-2"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </Button>
+          ) : (
+            <Button
+              onClick={signInWithGoogle}
+              className="bg-emerald-600 hover:bg-emerald-500"
+            >
+              Sign In
+            </Button>
+          )}
         </nav>
 
-        {/* Mobile menu */}
+        {/* Mobile */}
         <Sheet>
           <SheetTrigger asChild className="md:hidden">
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Menu className="h-5 w-5" />
+            <Button variant="ghost" size="icon">
+              <Menu className="h-6 w-6" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="bg-background border-border">
+          <SheetContent
+            side="right"
+            className="bg-neutral-950 border-neutral-800"
+          >
             <div className="flex flex-col gap-6 mt-10">
               {links.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-foreground/80 hover:text-foreground text-lg"
+                  className="text-xl text-neutral-300 hover:text-white"
                 >
                   {link.name}
                 </Link>
               ))}
-              <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-primary-foreground">
-                Book Coaching
-              </Button>
+              {user ? (
+                <Button onClick={signOut} variant="outline" className="w-full">
+                  Logout
+                </Button>
+              ) : (
+                <Button
+                  onClick={signInWithGoogle}
+                  className="w-full bg-emerald-600 hover:bg-emerald-500"
+                >
+                  Sign In with Google
+                </Button>
+              )}
             </div>
           </SheetContent>
         </Sheet>
