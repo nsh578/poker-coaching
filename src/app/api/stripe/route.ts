@@ -6,7 +6,6 @@ import Stripe from 'stripe'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2025-11-17.clover' })
 
-// This line is required in Next.js 15 for POST routes
 export const POST = async (request: Request) => {
   try {
     const { price_id } = await request.json()
@@ -53,11 +52,4 @@ export const POST = async (request: Request) => {
     console.error('Stripe route error:', error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
-}
-
-// Required for Vercel to route POST correctly
-export const config = {
-  api: {
-    bodyParser: false,   // Important! Stripe needs raw body for webhooks later too
-  },
 }
