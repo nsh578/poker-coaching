@@ -29,9 +29,15 @@ export default function Navbar() {
   }, [supabase]);
 
   const signInWithGoogle = async () => {
+    const origin =
+      typeof window !== "undefined"
+        ? window.location.origin
+        : "https://poker-coaching-xi.vercel.app";
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: location.origin },
+      options: {
+        redirectTo: `${origin}/auth/callback`, // Explicit callback path
+      },
     });
   };
 
