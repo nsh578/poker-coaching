@@ -1,9 +1,9 @@
 // src/app/coaching/page.tsx
-'use client'
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Check } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Check } from "lucide-react";
 
 export default function Coaching() {
   const packages = [
@@ -38,7 +38,7 @@ export default function Coaching() {
       name: "Monthly Membership",
       price: "$99/mo",
       popular: false,
-      priceId: "", // optional — add your monthly price ID later
+      priceId: "", // leave empty or add later
       features: [
         "All current videos",
         "New videos every month",
@@ -47,18 +47,34 @@ export default function Coaching() {
       ],
       cta: "Start Monthly",
     },
-  ]
+  ];
 
   const handleCheckout = async (priceId: string) => {
-    if (!priceId) return
-    const res = await fetch('/api/stripe', {
-      method: 'POST',
-      body: JSON.stringify({ price_id: priceId }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-    const { url } = await res.json()
-    window.location.href = url
-  }
+    if (!priceId) {
+      alert("Missing price ID — add your Stripe price ID in the code");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/stripe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ price_id: priceId }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        alert(`Error ${res.status}: ${err.error || "Please log in first"}`);
+        return;
+      }
+
+      const { url } = await res.json();
+      window.location.href = url;
+    } catch (err) {
+      console.error(err);
+      alert("Network error — try again");
+    }
+  };
 
   return (
     <main className="min-h-screen bg-neutral-950 py-20 px-6">
@@ -85,8 +101,10 @@ export default function Coaching() {
                   MOST POPULAR
                 </div>
               )}
+
               <div className="text-4xl font-black mb-4">{pkg.price}</div>
               <h3 className="text-2xl font-bold mb-6">{pkg.name}</h3>
+
               <ul className="space-y-4 mb-8 text-left">
                 {pkg.features.map((feature) => (
                   <li key={feature} className="flex items-center gap-3">
@@ -118,5 +136,5 @@ export default function Coaching() {
         </div>
       </div>
     </main>
-  )
+  );
 }
