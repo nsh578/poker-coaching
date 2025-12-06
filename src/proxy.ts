@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   try {
     // Early exit for static files (prevents unnecessary Supabase calls)
     if (req.nextUrl.pathname.startsWith('/_next') || req.nextUrl.pathname.includes('/static') || req.nextUrl.pathname.includes('/favicon.ico')) {
