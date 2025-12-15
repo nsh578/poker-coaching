@@ -57,7 +57,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b border-neutral-800 bg-neutral-950/95 backdrop-blur">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="text-2xl font-bold text-emerald-400">
-          [YourName] Poker
+          Michael Nam Coaching
         </Link>
 
         {/* Desktop */}

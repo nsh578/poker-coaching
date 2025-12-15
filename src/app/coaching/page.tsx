@@ -18,7 +18,7 @@ export default function Coaching() {
         "Tournament schedule planning",
       ],
       cta: "Book a session",
-      ctaLink: "mailto:you@example.com",
+      ctaLink: "mailto:nsh5784@example.com",
     },
     {
       name: "Lifetime Video Library",
@@ -35,17 +35,18 @@ export default function Coaching() {
       cta: "Buy Lifetime Access",
     },
     {
-      name: "Monthly Membership",
-      price: "$99/mo",
+      name: "Group Coaching",
+      price: "$199/mo",
       popular: false,
-      priceId: "", // leave empty or add later
       features: [
-        "All current videos",
-        "New videos every month",
-        "Discord access",
+        "Weekly group sessions (live Zoom)",
+        "Access to all video content",
+        "Group Discord channel",
+        "Q&A and hand reviews with the group",
         "Cancel anytime",
       ],
-      cta: "Start Monthly",
+      cta: "Join Group Coaching",
+      ctaLink: "mailto:you@example.com", // Change to Stripe price ID later if you want paid group
     },
   ];
 
@@ -97,13 +98,16 @@ export default function Coaching() {
               } bg-neutral-900/50 backdrop-blur`}
             >
               {pkg.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-emerald-500 text-black px-4 py-1 rounded-full text-sm font-bold">
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-emerald-500 text-black px-4 py-1 rounded-full text-sm font-bold">
                   MOST POPULAR
                 </div>
               )}
 
-              <div className="text-4xl font-black mb-4">{pkg.price}</div>
-              <h3 className="text-2xl font-bold mb-6">{pkg.name}</h3>
+              {/* Fixed readability: bright text for price and name */}
+              <div className="text-5xl font-black mb-4 text-emerald-400">
+                {pkg.price}
+              </div>
+              <h3 className="text-3xl font-bold mb-6 text-white">{pkg.name}</h3>
 
               <ul className="space-y-4 mb-8 text-left">
                 {pkg.features.map((feature) => (
